@@ -9,7 +9,7 @@ export default function KanbasNavigation() {
   return (
     <div id="wd-kanbas-navigation" style={{ width: 120 }} 
          className="list-group rounded-0 position-fixed
-         bottom-0 top-0 d-none d-md-block bg-black z-2">
+         bottom-0 top-0 d-none d-md-block bg-black z-2 d-none d-sm-block">
       <a id="wd-neu-link" target="_blank" 
         href="https://www.northeastern.edu/"
         className="list-group-item bg-black border-0 text-center">
