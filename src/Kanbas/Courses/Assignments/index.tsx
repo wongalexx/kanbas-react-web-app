@@ -46,20 +46,62 @@ export default function Assignments() {
                     <BsGripVertical className="me-2 fs-3" />
                     <MdOutlineAssignment color="green" />
                   </div>
+                  <div className="col-9 text-left m-0 p-0">
+                    <div className="row">
+                      <a className="wd-assignment-link"
+                        href="#/Kanbas/Courses/1234/Assignments/123">
+                        <b>A1</b>
+                      </a>
+                    </div>
+                    <div className="row">
+                      <span className="wd-assignment-description">
+                        <span className="red-font me-2">Multiple Modules </span> 
+                        <span className="grey-font">
+                          | <b>Not available until</b> May 6 at 12:00am |
+                        </span>
+                      </span>
+                    </div>
+                    <div className="row">
+                      <span className="wd-assignment-description">
+                        <span className="grey-font">
+                          <b>Due</b> May 13 at 11:59pm | 100pts
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div className="col text-right">
+                       <LessonControlButtons />
+                  </div>
+                </div>
+              </li>
+              <li className="wd-assignment-list-item list-group-item p-3 ps-1">
+                <div className="row">
+                  <div className="col text-left">
+                    <BsGripVertical className="me-2 fs-3" />
+                    <MdOutlineAssignment color="green" />
+                  </div>
                   <div className="col-9 text-left m-0 p-0">  
-                    <a className="wd-assignment-link "
-                      href="#/Kanbas/Courses/1234/Assignments/123">
-                      <b>A1</b>
-                    </a>
-                    <br/>
-                    <span className="wd-assignment-description m-0 p-0">
-                      <span className="red-font me-2">Multiple Modules </span> 
-                      <span className="grey-font">
-                        | <b>Not available until</b> May 6 at 12:00am |
-                        <br/>
-                        <b>Due</b> May 13 at 11:59pm | 100pts
+                    <div className="row">
+                      <a className="wd-assignment-link"
+                        href="#/Kanbas/Courses/1234/Assignments/123">
+                        <b>A2</b>
+                      </a>
+                    </div>
+                    <div className="row">
+                      <span className="wd-assignment-description">
+                        <span className="red-font me-2">Multiple Modules </span> 
+                        <span className="grey-font">
+                          | <b>Not available until</b> May 13 at 12:00am |
+                        </span>
                       </span>
-                    </span>
+                    </div>
+                    <div className="row">
+                      <span className="wd-assignment-description">
+                        <span className="grey-font">
+                          <b>Due</b> May 20 at 11:59pm | 100pts
+                        </span>
+                      </span>
+                    </div>
                   </div>
                   <div className="col text-right">
                        <LessonControlButtons />
@@ -73,45 +115,27 @@ export default function Assignments() {
                     <MdOutlineAssignment color="green" />
                   </div>
                   <div className="col-9 text-left p-0">  
-                    <a className="wd-assignment-link m-0 p-0"
-                      href="#/Kanbas/Courses/1234/Assignments/123">
-                      <b>A2</b>
-                    </a>
-                    <br/>
-                    <span className="wd-assignment-description m-0 p-0">
-                      <span className="red-font">Multiple Modules </span> 
-                      <span className="grey-font">
-                        | <b>Not available until</b> May 13 at 12:00am |
-                        <br/>
-                        <b>Due</b> May 20 at 11:59pm | 100pts
+                    <div className="row">
+                      <a className="wd-assignment-link"
+                        href="#/Kanbas/Courses/1234/Assignments/123">
+                        <b>A3</b>
+                      </a>
+                    </div>
+                    <div className="row">
+                      <span className="wd-assignment-description">
+                        <span className="red-font me-2">Multiple Modules </span> 
+                        <span className="grey-font">
+                          | <b>Not available until</b> May 20 at 12:00am |
+                        </span>
                       </span>
-                    </span>
-                  </div>
-                  <div className="col text-right">
-                       <LessonControlButtons />
-                  </div>
-                </div>
-              </li>
-              <li className="wd-assignment-list-item list-group-item p-3 ps-1">
-                <div className="row">
-                  <div className="col text-left">
-                    <BsGripVertical className="me-2 fs-3" />
-                    <MdOutlineAssignment color="green" />
-                  </div>
-                  <div className="col-9 text-left p-0">  
-                    <a className="wd-assignment-link m-0 p-0"
-                      href="#/Kanbas/Courses/1234/Assignments/123">
-                      <b>A3</b>
-                    </a>
-                    <br/>
-                    <span className="wd-assignment-description m-0 p-0">
-                      <span className="red-font">Multiple Modules </span> 
-                      <span className="grey-font">
-                        | <b>Not available until</b> May 20 at 12:00am |
-                        <br/>
-                        <b>Due</b> May 27 at 11:59pm | 100pts
+                    </div>
+                    <div className="row">
+                      <span className="wd-assignment-description">
+                        <span className="grey-font">
+                          <b>Due</b> May 27 at 11:59pm | 100pts
+                        </span>
                       </span>
-                    </span>
+                    </div>
                   </div>
                   <div className="col text-right">
                        <LessonControlButtons />
