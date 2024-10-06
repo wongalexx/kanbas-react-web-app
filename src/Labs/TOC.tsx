@@ -31,7 +31,7 @@ export default function TOC() {
           Kanbas
         </a>
       </li>
-      <li className="nav-item">
+      <li className="wd-github">
         <a id="wd-k" href="https://github.com/wongalexx/kanbas-react-web-app/tree/a2" className="nav-link">
           My GitHub
         </a>

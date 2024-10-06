@@ -126,6 +126,7 @@ export default function AssignmentEditor() {
               </div>
             </div>  
           </div>
+          <hr />
           <div className="mt-3">
             <div className="row float-end">
               <div className="col">
