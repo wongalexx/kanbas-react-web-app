@@ -5,7 +5,7 @@ import Lab2 from "./Lab2";
 import Lab3 from "./Lab3";
 export default function Labs() {
   return (
-    <div className="ms-2">
+    <div className="p-3 ms-2">
       <h1>Alexander Wong</h1>
       <h1>Section 01</h1>
       <h1>Labs</h1>
