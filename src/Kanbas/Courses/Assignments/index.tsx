@@ -1,86 +1,186 @@
-import '../../styles.css';
+import "../../styles.css";
 import { AiOutlinePlus } from "react-icons/ai";
-import { BsGripVertical } from 'react-icons/bs';
+import { BsGripVertical } from "react-icons/bs";
 import { CiSearch } from "react-icons/ci";
-import LessonControlButtons from '../Modules/LessonControlButtons';
+import LessonControlButtons from "../Modules/LessonControlButtons";
 import { RxTriangleDown } from "react-icons/rx";
-import { FaPlus } from 'react-icons/fa';
-import { IoEllipsisVertical } from 'react-icons/io5';
-import { MdOutlineAssignment } from 'react-icons/md';
+import { FaPlus } from "react-icons/fa";
+import { IoEllipsisVertical } from "react-icons/io5";
+import { MdOutlineAssignment } from "react-icons/md";
 import * as db from "../../Database";
-import { useParams } from 'react-router';
+import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteAssignment } from "./reducer";
+import { FaTrashCan } from "react-icons/fa6";
+import AssignmentsButtons from "./AssignmentsButtons";
+import { useState } from "react";
 export default function Assignments() {
+  const dispatch = useDispatch();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const { cid, aid } = useParams();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [assignmentToDelete, setAssignmentToDelete] = useState<string | null>(
+    null
+  );
+
+  const handleDeleteConfirmation = (assignmentId: string) => {
+    setAssignmentToDelete(assignmentId);
+    setShowDeleteDialog(true);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteDialog(false);
+    setAssignmentToDelete(null);
+  };
+
+  const handleDeleteAssignment = () => {
+    if (assignmentToDelete) {
+      dispatch(deleteAssignment(assignmentToDelete));
+      setShowDeleteDialog(false);
+      setAssignmentToDelete(null);
+    }
+  };
+
   return (
     <div id="wd-assignments">
       <div className="row mb-3">
         <div className="col-md-6">
           <div className="input-group">
-            <span className="input-group-text"><CiSearch /></span>
-            <input id="wd-search-assignment" type="text" className="form-control" placeholder="Search..." />
+            <span className="input-group-text">
+              <CiSearch />
+            </span>
+            <input
+              id="wd-search-assignment"
+              type="text"
+              className="form-control"
+              placeholder="Search..."
+            />
           </div>
         </div>
-        <div className="col-md-6 text-end">
-          <button id="wd-add-assignment-group" className="btn btn-secondary btn-lg me-1">
-            <AiOutlinePlus /> Group
-          </button>
-          <button id="wd-add-assignment" className="btn btn-danger btn-lg">
-            <AiOutlinePlus /> Assignment
-          </button>
-        </div>
+        {currentUser.role === "FACULTY" && (
+          <div className="col-md-6 text-end">
+            <button
+              id="wd-add-assignment-group"
+              className="btn btn-secondary btn-lg me-1"
+            >
+              <AiOutlinePlus /> Group
+            </button>
+            <a href={`#/Kanbas/Courses/${cid}/Assignments/${aid}`}>
+              <button id="wd-add-assignment" className="btn btn-danger btn-lg">
+                <AiOutlinePlus /> Assignment
+              </button>
+            </a>
+          </div>
+        )}
       </div>
       <ul id="wd-assignments" className="list-group rounded-0">
         <li className="wd-assignments list-group-item p-0 mb-5 fs-5 border-gray">
-          <div id="wd-assignments-title" className="wd-title p-3 ps-2 bg-secondary">
+          <div
+            id="wd-assignments-title"
+            className="wd-title p-3 ps-2 bg-secondary"
+          >
             <BsGripVertical className="me-2 fs-3" />
             <RxTriangleDown />
-            <b>ASSIGNMENTS</b> 
-            <div className="float-end">
-              <button id="wd-assignments-title-grade-percent" type="button" className="btn btn-outline-secondary" disabled>40% of Total</button>
-              <FaPlus />
-              <IoEllipsisVertical className="fs-4" />
-            </div>
+            <b>ASSIGNMENTS</b>
+            {currentUser.role === "FACULTY" && (
+              <div className="float-end">
+                <button
+                  id="wd-assignments-title-grade-percent"
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  disabled
+                >
+                  40% of Total
+                </button>
+                <FaPlus />
+                <IoEllipsisVertical className="fs-4" />
+              </div>
+            )}
           </div>
-          {db.assignments
-          .filter((assignment: any) => assignment.course === cid)
-          .map((assignment: any) => (
-            <li className="wd-assignment-list-item list-group-item p-3 ps-1">
-            <div className="row">
-              <div className="col text-left">
-                <BsGripVertical className="me-2 fs-3" />
-                <MdOutlineAssignment color="green" />
-              </div>
-              <div className="col-9 text-left p-0">  
+          {assignments
+            .filter((assignment: any) => assignment.course === cid)
+            .map((assignment: any) => (
+              <li className="wd-assignment-list-item list-group-item p-3 ps-1">
                 <div className="row">
-                  <a className="wd-assignment-link"
-                    href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
-                    <b>{assignment.title}</b>
-                  </a>
+                  <div className="col text-left">
+                    <BsGripVertical className="me-2 fs-3" />
+                    <MdOutlineAssignment color="green" />
+                  </div>
+                  <div className="col-9 text-left p-0">
+                    <div className="row">
+                      {currentUser.role === "FACULTY" ? (
+                        <a
+                          className="wd-assignment-link"
+                          href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
+                        >
+                          <b>{assignment.title}</b>
+                        </a>
+                      ) : (
+                        <b className="wd-assignment-link">{assignment.title}</b>
+                      )}
+                    </div>
+                    <div className="row">
+                      <span className="wd-assignment-description">
+                        <span className="red-font me-2">Multiple Modules </span>
+                        <span className="grey-font">
+                          | <b>Not available until</b>{" "}
+                          {assignment.availableFromDate} |
+                        </span>
+                      </span>
+                    </div>
+                    <div className="row">
+                      <span className="wd-assignment-description">
+                        <span className="grey-font">
+                          <b>Due</b> {assignment.due} | {assignment.points}pts
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  {currentUser.role === "FACULTY" ? (
+                    <div className="col text-right">
+                      <AssignmentsButtons
+                        assignmentID={assignment._id}
+                        deleteAssignment={() =>
+                          handleDeleteConfirmation(assignment._id)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <span className="col text-right"> </span>
+                  )}
                 </div>
-                <div className="row">
-                  <span className="wd-assignment-description">
-                    <span className="red-font me-2">Multiple Modules </span> 
-                    <span className="grey-font">
-                      | <b>Not available until</b> {assignment.not_available_until} |
-                    </span>
-                  </span>
-                </div>
-                <div className="row">
-                  <span className="wd-assignment-description">
-                    <span className="grey-font">
-                      <b>Due</b> {assignment.due} | {assignment.points}pts
-                    </span>
-                  </span>
-                </div>
-              </div>
-              <div className="col text-right">
-                    <LessonControlButtons />
-              </div>
-            </div>
-          </li>))}
+              </li>
+            ))}
         </li>
       </ul>
+      {showDeleteDialog && (
+        <div className="modal show" style={{ display: "block", zIndex: 1050 }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-body">
+                <p>Are you sure you want to delete this assignment?</p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleCancelDelete}
+                >
+                  No, Cancel
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={handleDeleteAssignment}
+                >
+                  Yes, Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-  
