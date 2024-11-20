@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import * as db from "./Database";
 import { useSelector } from "react-redux";
 import Enrollments from "./Enrollments";
+import * as userClient from "./Account/client";
+import * as courseClient from "./Courses/client";
 export default function Dashboard({
   courses,
+  setCourses,
   course,
   setCourse,
   addNewCourse,
@@ -12,6 +14,7 @@ export default function Dashboard({
   updateCourse,
 }: {
   courses: any[];
+  setCourses: (courses: any[]) => void;
   course: any;
   setCourse: (course: any) => void;
   addNewCourse: () => void;
@@ -19,7 +22,26 @@ export default function Dashboard({
   updateCourse: () => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
+  const fetchCourses = async () => {
+    try {
+      const courses = await userClient.findMyCourses();
+      setCourses(courses);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  // const findAllCourses = async () => {
+  //   try {
+  //     const courses = await courseClient.fetchAllCourses();
+  //     setCourses(courses);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+  useEffect(() => {
+    fetchCourses();
+    // findAllCourses();
+  }, [currentUser]);
   const [showAllCourses, setShowAllCourses] = useState(false);
   return (
     <div id="wd-dashboard">

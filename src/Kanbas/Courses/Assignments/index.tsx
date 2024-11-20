@@ -7,41 +7,51 @@ import { RxTriangleDown } from "react-icons/rx";
 import { FaPlus } from "react-icons/fa";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { MdOutlineAssignment } from "react-icons/md";
-import * as db from "../../Database";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAssignment } from "./reducer";
+import { setAssignments, deleteAssignment } from "./reducer";
 import { FaTrashCan } from "react-icons/fa6";
 import AssignmentsButtons from "./AssignmentsButtons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
 export default function Assignments() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
+  const fetchAssignments = async () => {
+    const assignments = await coursesClient.findAssignmentsForCourse(
+      cid as string
+    );
+    dispatch(setAssignments(assignments));
+  };
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+  const removeAssignment = async (assignmentId: string) => {
+    await assignmentsClient.deleteAssignment(assignmentId);
+    dispatch(deleteAssignment(assignmentId));
+  };
   const { cid, aid } = useParams();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [assignmentToDelete, setAssignmentToDelete] = useState<string | null>(
     null
   );
-
   const handleDeleteConfirmation = (assignmentId: string) => {
     setAssignmentToDelete(assignmentId);
     setShowDeleteDialog(true);
   };
-
   const handleCancelDelete = () => {
     setShowDeleteDialog(false);
     setAssignmentToDelete(null);
   };
-
   const handleDeleteAssignment = () => {
     if (assignmentToDelete) {
-      dispatch(deleteAssignment(assignmentToDelete));
+      removeAssignment(assignmentToDelete);
       setShowDeleteDialog(false);
       setAssignmentToDelete(null);
     }
   };
-
   return (
     <div id="wd-assignments">
       <div className="row mb-3">
@@ -98,60 +108,58 @@ export default function Assignments() {
               </div>
             )}
           </div>
-          {assignments
-            .filter((assignment: any) => assignment.course === cid)
-            .map((assignment: any) => (
-              <li className="wd-assignment-list-item list-group-item p-3 ps-1">
-                <div className="row">
-                  <div className="col text-left">
-                    <BsGripVertical className="me-2 fs-3" />
-                    <MdOutlineAssignment color="green" />
-                  </div>
-                  <div className="col-9 text-left p-0">
-                    <div className="row">
-                      {currentUser.role === "FACULTY" ? (
-                        <a
-                          className="wd-assignment-link"
-                          href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
-                        >
-                          <b>{assignment.title}</b>
-                        </a>
-                      ) : (
-                        <b className="wd-assignment-link">{assignment.title}</b>
-                      )}
-                    </div>
-                    <div className="row">
-                      <span className="wd-assignment-description">
-                        <span className="red-font me-2">Multiple Modules </span>
-                        <span className="grey-font">
-                          | <b>Not available until</b>{" "}
-                          {assignment.availableFromDate} |
-                        </span>
-                      </span>
-                    </div>
-                    <div className="row">
-                      <span className="wd-assignment-description">
-                        <span className="grey-font">
-                          <b>Due</b> {assignment.due} | {assignment.points}pts
-                        </span>
-                      </span>
-                    </div>
-                  </div>
-                  {currentUser.role === "FACULTY" ? (
-                    <div className="col text-right">
-                      <AssignmentsButtons
-                        assignmentID={assignment._id}
-                        deleteAssignment={() =>
-                          handleDeleteConfirmation(assignment._id)
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <span className="col text-right"> </span>
-                  )}
+          {assignments.map((assignment: any) => (
+            <li className="wd-assignment-list-item list-group-item p-3 ps-1">
+              <div className="row">
+                <div className="col text-left">
+                  <BsGripVertical className="me-2 fs-3" />
+                  <MdOutlineAssignment color="green" />
                 </div>
-              </li>
-            ))}
+                <div className="col-9 text-left p-0">
+                  <div className="row">
+                    {currentUser.role === "FACULTY" ? (
+                      <a
+                        className="wd-assignment-link"
+                        href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
+                      >
+                        <b>{assignment.title}</b>
+                      </a>
+                    ) : (
+                      <b className="wd-assignment-link">{assignment.title}</b>
+                    )}
+                  </div>
+                  <div className="row">
+                    <span className="wd-assignment-description">
+                      <span className="red-font me-2">Multiple Modules </span>
+                      <span className="grey-font">
+                        | <b>Not available until</b>{" "}
+                        {assignment.availableFromDate} |
+                      </span>
+                    </span>
+                  </div>
+                  <div className="row">
+                    <span className="wd-assignment-description">
+                      <span className="grey-font">
+                        <b>Due</b> {assignment.due} | {assignment.points}pts
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                {currentUser.role === "FACULTY" ? (
+                  <div className="col text-right">
+                    <AssignmentsButtons
+                      assignmentID={assignment._id}
+                      deleteAssignment={() =>
+                        handleDeleteConfirmation(assignment._id)
+                      }
+                    />
+                  </div>
+                ) : (
+                  <span className="col text-right"> </span>
+                )}
+              </div>
+            </li>
+          ))}
         </li>
       </ul>
       {showDeleteDialog && (

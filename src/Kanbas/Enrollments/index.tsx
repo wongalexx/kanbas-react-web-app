@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
-import { courses, enrollments } from "../Database";
 import { useDispatch, useSelector } from "react-redux";
-import * as db from "../Database";
 import { addEnrollment, deleteEnrollment } from "./reducer";
 
 export default function Enrollments({
@@ -24,17 +22,8 @@ export default function Enrollments({
   updateCourse: () => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
+
   const dispatch = useDispatch();
-  const filteredCourses = showAllCourses
-    ? courses
-    : courses.filter((course) =>
-        enrollments.some(
-          (enrollment: any) =>
-            enrollment.user === currentUser._id &&
-            enrollment.course === course._id
-        )
-      );
   const handleEnroll = (courseId: string) => {
     const enrollment = {
       _id: new Date().getTime().toString(),
@@ -44,18 +33,18 @@ export default function Enrollments({
     dispatch(addEnrollment(enrollment));
   };
 
-  const handleUnenroll = (courseId: string) => {
-    const enrollment = enrollments.find(
-      (e: any) => e.user === currentUser._id && e.course === courseId
-    );
-    if (enrollment) {
-      dispatch(deleteEnrollment(enrollment._id));
-    }
-  };
+  // const handleUnenroll = (courseId: string) => {
+  //   const enrollment = enrollments.find(
+  //     (e: any) => e.user === currentUser._id && e.course === courseId
+  //   );
+  //   if (enrollment) {
+  //     dispatch(deleteEnrollment(enrollment._id));
+  //   }
+  // };
   return (
     <div>
       <h2 id="wd-dashboard-published">
-        Published Courses ({filteredCourses.length})
+        Published Courses ({courses.length})
         {currentUser.role === "STUDENT" && (
           <button
             className="btn btn-primary float-end"
@@ -69,7 +58,7 @@ export default function Enrollments({
       <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {filteredCourses.map((course) => (
+          {courses.map((course) => (
             <div
               className="wd-dashboard-course col"
               style={{ width: "300px" }}
@@ -121,13 +110,13 @@ export default function Enrollments({
                         </button>
                       </span>
                     ) : !courses
-                        .filter((course) =>
-                          enrollments.some(
-                            (enrollment: any) =>
-                              enrollment.user === currentUser._id &&
-                              enrollment.course === course._id
-                          )
-                        )
+                        // .filter((course) =>
+                        //   enrollments.some(
+                        //     (enrollment: any) =>
+                        //       enrollment.user === currentUser._id &&
+                        //       enrollment.course === course._id
+                        //   )
+                        // )
                         .includes(course) ? (
                       <button
                         className="btn btn-success float-end"
@@ -145,7 +134,7 @@ export default function Enrollments({
                         className="btn btn-danger me-2 float-end"
                         onClick={(event) => {
                           event.preventDefault();
-                          handleUnenroll(course._id);
+                          // handleUnenroll(course._id);
                         }}
                       >
                         Unenroll
