@@ -1,46 +1,38 @@
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { addEnrollment, deleteEnrollment } from "./reducer";
-
+import { useSelector } from "react-redux";
 export default function Enrollments({
+  currentUser,
   showAllCourses,
   setShowAllCourses,
+  // enrolledCourses,
+  // setEnrolledCourses,
   courses,
+  setCourses,
   course,
   setCourse,
   addNewCourse,
   deleteCourse,
   updateCourse,
+  enrollments,
+  enrollUserInCourse,
+  unenrollUserInCourse,
 }: {
+  currentUser: any;
   showAllCourses: boolean;
   setShowAllCourses: (showAllCourses: boolean) => void;
+  // enrolledCourses: any;
+  // setEnrolledCourses: (courses: any[]) => void;
   courses: any[];
+  setCourses: (courses: any[]) => void;
   course: any;
   setCourse: (course: any) => void;
   addNewCourse: () => void;
   deleteCourse: (course: any) => void;
   updateCourse: () => void;
+  enrollments: any[];
+  enrollUserInCourse: (courseId: any) => void;
+  unenrollUserInCourse: (courseId: any) => void;
 }) {
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
-
-  const dispatch = useDispatch();
-  const handleEnroll = (courseId: string) => {
-    const enrollment = {
-      _id: new Date().getTime().toString(),
-      user: currentUser._id,
-      course: courseId,
-    };
-    dispatch(addEnrollment(enrollment));
-  };
-
-  // const handleUnenroll = (courseId: string) => {
-  //   const enrollment = enrollments.find(
-  //     (e: any) => e.user === currentUser._id && e.course === courseId
-  //   );
-  //   if (enrollment) {
-  //     dispatch(deleteEnrollment(enrollment._id));
-  //   }
-  // };
   return (
     <div>
       <h2 id="wd-dashboard-published">
@@ -123,7 +115,7 @@ export default function Enrollments({
                         id="wd-delete-course-click"
                         onClick={(event) => {
                           event.preventDefault();
-                          handleEnroll(course._id);
+                          enrollUserInCourse(course._id);
                         }}
                       >
                         Enroll
@@ -134,7 +126,7 @@ export default function Enrollments({
                         className="btn btn-danger me-2 float-end"
                         onClick={(event) => {
                           event.preventDefault();
-                          // handleUnenroll(course._id);
+                          unenrollUserInCourse(course._id);
                         }}
                       >
                         Unenroll

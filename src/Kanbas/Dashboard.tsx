@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Enrollments from "./Enrollments";
 import * as userClient from "./Account/client";
 import * as courseClient from "./Courses/client";
+import * as enrollmentClient from "./Enrollments/client";
+import {
+  setEnrollments,
+  addEnrollment,
+  deleteEnrollment,
+} from "./Enrollments/reducer";
 export default function Dashboard({
   courses,
   setCourses,
@@ -22,6 +28,23 @@ export default function Dashboard({
   updateCourse: () => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
+  const dispatch = useDispatch();
+  // Get all courses if the toggle is set to show all courses, otherwise just filter courses that the user is enrolled in
+  const [showAllCourses, setShowAllCourses] = useState(false);
+  const enrollUserInCourse = async (courseId: any) => {
+    const enrollment = {
+      _id: new Date().getTime().toString(),
+      user: currentUser._id,
+      course: courseId,
+    };
+    await enrollmentClient.enrollUserInCourse(currentUser._id, courseId);
+    dispatch(addEnrollment(enrollment));
+  };
+  const unenrollUserInCourse = async (courseId: any) => {
+    await enrollmentClient.unenrollUserInCourse(currentUser._id, courseId);
+    dispatch(deleteEnrollment(courseId));
+  };
   const fetchCourses = async () => {
     try {
       const courses = await userClient.findMyCourses();
@@ -30,19 +53,20 @@ export default function Dashboard({
       console.error(error);
     }
   };
-  // const findAllCourses = async () => {
-  //   try {
-  //     const courses = await courseClient.fetchAllCourses();
-  //     setCourses(courses);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const fetchAllCourses = async () => {
+    const courses = await courseClient.fetchAllCourses();
+    setCourses(courses);
+  };
   useEffect(() => {
-    fetchCourses();
-    // findAllCourses();
-  }, [currentUser]);
-  const [showAllCourses, setShowAllCourses] = useState(false);
+    const getCourses = () => {
+      if (!showAllCourses) {
+        fetchCourses();
+      } else {
+        fetchAllCourses();
+      }
+    };
+    getCourses();
+  }, [currentUser, showAllCourses]);
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
@@ -83,14 +107,21 @@ export default function Dashboard({
         </span>
       )}
       <Enrollments
+        currentUser={currentUser}
         showAllCourses={showAllCourses}
         setShowAllCourses={setShowAllCourses}
+        // enrolledCourses={}
+        // setEnrolledCourses={}
         courses={courses}
+        setCourses={setCourses}
         course={course}
         setCourse={setCourse}
         addNewCourse={addNewCourse}
         deleteCourse={deleteCourse}
         updateCourse={updateCourse}
+        enrollments={enrollments}
+        enrollUserInCourse={enrollUserInCourse}
+        unenrollUserInCourse={unenrollUserInCourse}
       />
     </div>
   );
