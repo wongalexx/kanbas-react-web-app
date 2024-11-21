@@ -43,8 +43,8 @@ export default function Kanbas() {
     );
   };
   return (
-    <Provider store={store}>
-      <Session>
+    <Session>
+      <Provider store={store}>
         <div id="wd-kanbas">
           <KanbasNavigation />
           <div className="wd-main-content-offset p-3">
@@ -82,7 +82,7 @@ export default function Kanbas() {
             </Routes>
           </div>
         </div>
-      </Session>
-    </Provider>
+      </Provider>
+    </Session>
   );
 }
