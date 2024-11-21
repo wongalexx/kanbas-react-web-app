@@ -30,7 +30,6 @@ export default function Dashboard({
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
   const dispatch = useDispatch();
-  // Get all courses if the toggle is set to show all courses, otherwise just filter courses that the user is enrolled in
   const [showAllCourses, setShowAllCourses] = useState(false);
   const enrollUserInCourse = async (courseId: any) => {
     const enrollment = {
@@ -49,6 +48,8 @@ export default function Dashboard({
     try {
       const courses = await userClient.findMyCourses();
       setCourses(courses);
+      courses.map((course: any) => enrollUserInCourse(course._id));
+      dispatch(setEnrollments(courses));
     } catch (error) {
       console.error(error);
     }
@@ -58,15 +59,12 @@ export default function Dashboard({
     setCourses(courses);
   };
   useEffect(() => {
-    const getCourses = () => {
-      if (!showAllCourses) {
-        fetchCourses();
-      } else {
-        fetchAllCourses();
-      }
-    };
-    getCourses();
-  }, [currentUser, showAllCourses]);
+    if (showAllCourses) {
+      fetchAllCourses();
+    } else {
+      fetchCourses();
+    }
+  }, [showAllCourses, currentUser]);
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
@@ -110,15 +108,9 @@ export default function Dashboard({
         currentUser={currentUser}
         showAllCourses={showAllCourses}
         setShowAllCourses={setShowAllCourses}
-        // enrolledCourses={}
-        // setEnrolledCourses={}
         courses={courses}
-        setCourses={setCourses}
-        course={course}
         setCourse={setCourse}
-        addNewCourse={addNewCourse}
         deleteCourse={deleteCourse}
-        updateCourse={updateCourse}
         enrollments={enrollments}
         enrollUserInCourse={enrollUserInCourse}
         unenrollUserInCourse={unenrollUserInCourse}
