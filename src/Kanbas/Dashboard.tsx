@@ -47,16 +47,16 @@ export default function Dashboard({
   const fetchCourses = async () => {
     try {
       const courses = await userClient.findMyCourses();
-      setCourses(courses);
-      courses.map((course: any) => enrollUserInCourse(course._id));
+      console.log("Courses", courses);
       dispatch(setEnrollments(courses));
+      enrollments.map((enrollment: any) => enrollUserInCourse(enrollment._id));
+      console.log(enrollments);
     } catch (error) {
       console.error(error);
     }
   };
   const fetchAllCourses = async () => {
     const courses = await courseClient.fetchAllCourses();
-    setCourses(courses);
   };
   useEffect(() => {
     if (showAllCourses) {
