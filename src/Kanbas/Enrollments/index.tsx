@@ -23,10 +23,9 @@ export default function Enrollments({
 }) {
   const isEnrolled = (courseId: string) =>
     enrollments.some(
-      (enrollment: any) =>
+      (enrollment) =>
         enrollment.user === currentUser._id && enrollment.course === courseId
     );
-
   return (
     <div>
       <h2 id="wd-dashboard-published">

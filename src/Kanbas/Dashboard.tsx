@@ -11,60 +11,32 @@ import {
   deleteEnrollment,
 } from "./Enrollments/reducer";
 export default function Dashboard({
+  currentUser,
+  enrollments,
+  enrollUserInCourse,
+  unenrollUserInCourse,
   courses,
-  setCourses,
   course,
+  showAllCourses,
+  setShowAllCourses,
   setCourse,
   addNewCourse,
   deleteCourse,
   updateCourse,
 }: {
+  currentUser: any;
+  enrollments: any;
+  enrollUserInCourse: (courseId: any) => void;
+  unenrollUserInCourse: (courseId: any) => void;
   courses: any[];
-  setCourses: (courses: any[]) => void;
   course: any;
+  showAllCourses: boolean;
+  setShowAllCourses: (value: boolean) => void;
   setCourse: (course: any) => void;
   addNewCourse: () => void;
   deleteCourse: (course: any) => void;
   updateCourse: () => void;
 }) {
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
-  const dispatch = useDispatch();
-  const [showAllCourses, setShowAllCourses] = useState(false);
-  const enrollUserInCourse = async (courseId: any) => {
-    const enrollment = {
-      _id: new Date().getTime().toString(),
-      user: currentUser._id,
-      course: courseId,
-    };
-    await enrollmentClient.enrollUserInCourse(currentUser._id, courseId);
-    dispatch(addEnrollment(enrollment));
-  };
-  const unenrollUserInCourse = async (courseId: any) => {
-    await enrollmentClient.unenrollUserInCourse(currentUser._id, courseId);
-    dispatch(deleteEnrollment(courseId));
-  };
-  const fetchCourses = async () => {
-    try {
-      const courses = await userClient.findMyCourses();
-      console.log("Courses", courses);
-      dispatch(setEnrollments(courses));
-      enrollments.map((enrollment: any) => enrollUserInCourse(enrollment._id));
-      console.log(enrollments);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const fetchAllCourses = async () => {
-    const courses = await courseClient.fetchAllCourses();
-  };
-  useEffect(() => {
-    if (showAllCourses) {
-      fetchAllCourses();
-    } else {
-      fetchCourses();
-    }
-  }, [showAllCourses, currentUser]);
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
