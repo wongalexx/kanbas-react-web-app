@@ -4,7 +4,7 @@ import { addAssignment, updateAssignment } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import * as coursesClient from "../client";
 import * as assignmentsClient from "./client";
-export default function AssignmentEditor() {
+export default function AssignmentEditor({ course }: { course: any }) {
   const dispatch = useDispatch();
   const { cid, aid } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
@@ -30,7 +30,7 @@ export default function AssignmentEditor() {
     if (!cid) return;
     const newAssignment = {
       _id: aid,
-      course: cid,
+      course: course.number,
       title: assignmentTitle,
       description: assignmentDescription,
       points: parseInt(assignmentPoints),
@@ -39,7 +39,7 @@ export default function AssignmentEditor() {
       availableUntilDate: assignmentAvailableUntilDate,
     };
     const assignment = await coursesClient.createAssignmentForCourse(
-      cid,
+      course.number,
       newAssignment
     );
     dispatch(addAssignment(assignment));
@@ -52,7 +52,7 @@ export default function AssignmentEditor() {
     if (assignment) {
       saveAssignment({
         _id: aid,
-        course: cid,
+        course: course.number,
         title: assignmentTitle,
         description: assignmentDescription,
         points: parseInt(assignmentPoints),

@@ -6,9 +6,9 @@ const enrollmentsSlice = createSlice({
   name: "enrollments",
   initialState,
   reducers: {
-    setEnrollments: (state, action) => {
-      state.enrollments = action.payload;
-    },
+    // setEnrollments: (state, action) => {
+    //   state.enrollments = action.payload;
+    // },
     addEnrollment: (state, { payload: enrollment }) => {
       state.enrollments = [...state.enrollments, enrollment] as any;
     },
@@ -19,6 +19,5 @@ const enrollmentsSlice = createSlice({
     },
   },
 });
-export const { setEnrollments, addEnrollment, deleteEnrollment } =
-  enrollmentsSlice.actions;
+export const { addEnrollment, deleteEnrollment } = enrollmentsSlice.actions;
 export default enrollmentsSlice.reducer;

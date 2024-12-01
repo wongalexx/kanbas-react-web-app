@@ -4,42 +4,57 @@ import { useDispatch, useSelector } from "react-redux";
 import Enrollments from "./Enrollments";
 import * as userClient from "./Account/client";
 import * as courseClient from "./Courses/client";
-import * as enrollmentClient from "./Enrollments/client";
-import {
-  setEnrollments,
-  addEnrollment,
-  deleteEnrollment,
-} from "./Enrollments/reducer";
+// import * as enrollmentClient from "./Enrollments/client";
+// import {
+//   setEnrollments,
+//   addEnrollment,
+//   deleteEnrollment,
+// } from "./Enrollments/reducer";
 export default function Dashboard({
   currentUser,
-  enrollments,
-  enrollUserInCourse,
-  unenrollUserInCourse,
+  // enrollments,
+  // enrollUserInCourse,
+  // unenrollUserInCourse,
   courses,
   course,
-  showAllCourses,
-  setShowAllCourses,
+  // showAllCourses,
+  // setShowAllCourses,
   setCourse,
   addNewCourse,
   deleteCourse,
   updateCourse,
+  enrolling,
+  setEnrolling,
+  updateEnrollment,
 }: {
   currentUser: any;
-  enrollments: any;
-  enrollUserInCourse: (courseId: any) => void;
-  unenrollUserInCourse: (courseId: any) => void;
+  // enrollments: any;
+  // enrollUserInCourse: (courseId: any) => void;
+  // unenrollUserInCourse: (courseId: any) => void;
   courses: any[];
   course: any;
-  showAllCourses: boolean;
-  setShowAllCourses: (value: boolean) => void;
+  // showAllCourses: boolean;
+  // setShowAllCourses: (value: boolean) => void;
   setCourse: (course: any) => void;
   addNewCourse: () => void;
   deleteCourse: (course: any) => void;
   updateCourse: () => void;
+  enrolling: boolean;
+  setEnrolling: (enrolling: boolean) => void;
+  updateEnrollment: (courseId: string, enrolled: boolean) => void;
 }) {
   return (
     <div id="wd-dashboard">
-      <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+      <h1 id="wd-dashboard-title">
+        Dashboard{" "}
+        <button
+          onClick={() => setEnrolling(!enrolling)}
+          className="float-end btn btn-primary"
+        >
+          {enrolling ? "My Courses" : "All Courses"}
+        </button>
+      </h1>{" "}
+      <hr />
       {currentUser.role === "FACULTY" && (
         <span>
           <h5>
@@ -78,14 +93,12 @@ export default function Dashboard({
       )}
       <Enrollments
         currentUser={currentUser}
-        showAllCourses={showAllCourses}
-        setShowAllCourses={setShowAllCourses}
         courses={courses}
         setCourse={setCourse}
         deleteCourse={deleteCourse}
-        enrollments={enrollments}
-        enrollUserInCourse={enrollUserInCourse}
-        unenrollUserInCourse={unenrollUserInCourse}
+        enrolling={enrolling}
+        setEnrolling={setEnrolling}
+        updateEnrollment={updateEnrollment}
       />
     </div>
   );

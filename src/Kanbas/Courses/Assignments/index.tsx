@@ -15,19 +15,17 @@ import AssignmentsButtons from "./AssignmentsButtons";
 import { useEffect, useState } from "react";
 import * as coursesClient from "../client";
 import * as assignmentsClient from "./client";
-export default function Assignments() {
+export default function Assignments({ course }: { course: any }) {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const fetchAssignments = async () => {
     const assignments = await coursesClient.findAssignmentsForCourse(
-      cid as string
+      course.number as string
     );
+    console.log("ASSIGNMENTS", assignments);
     dispatch(setAssignments(assignments));
   };
-  useEffect(() => {
-    fetchAssignments();
-  }, []);
   const removeAssignment = async (assignmentId: string) => {
     await assignmentsClient.deleteAssignment(assignmentId);
     dispatch(deleteAssignment(assignmentId));
@@ -52,6 +50,9 @@ export default function Assignments() {
       setAssignmentToDelete(null);
     }
   };
+  useEffect(() => {
+    fetchAssignments();
+  }, [cid, course, dispatch]);
   return (
     <div id="wd-assignments">
       <div className="row mb-3">
