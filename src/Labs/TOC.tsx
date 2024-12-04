@@ -61,7 +61,7 @@ export default function TOC() {
       <li className="wd-github">
         <a
           id="wd-k"
-          href="https://github.com/wongalexx/kanbas-react-web-app/tree/a4"
+          href="https://github.com/wongalexx/kanbas-react-web-app/tree/a6"
           className="nav-link"
         >
           React Webpage Code
@@ -70,7 +70,7 @@ export default function TOC() {
       <li className="wd-github">
         <a
           id="wd-k"
-          href="https://github.com/wongalexx/kanbas-node-server-app"
+          href="https://github.com/wongalexx/kanbas-node-server-app/tree/a6"
           className="nav-link"
         >
           Node Server Code
