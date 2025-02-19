@@ -7,6 +7,8 @@ export const fetchEnrollments = async () => {
   const response = await axiosWithCredentials.get(ENROLLMENTS_API);
   return response.data;
 };
+// const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
+// const ENROLLMENTS_API = `${REMOTE_SERVER}/api/enrollments`;
 // export const getUserEnrollments = async (userId: any) => {
 //   const { data } = await axios.get(`${ENROLLMENTS_API}/${userId}`);
 //   return data;

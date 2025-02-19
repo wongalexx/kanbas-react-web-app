@@ -20,7 +20,7 @@ export default function Modules({ course }: { course: any }) {
   const { modules } = useSelector((state: any) => state.modulesReducer);
   const dispatch = useDispatch();
   const fetchModules = async () => {
-    const modules = await coursesClient.findModulesForCourse(course.number);
+    const modules = await coursesClient.findModulesForCourse(cid as string);
     dispatch(setModules(modules));
   };
   useEffect(() => {
@@ -28,11 +28,8 @@ export default function Modules({ course }: { course: any }) {
   }, [cid, course, dispatch]);
   const createModuleForCourse = async () => {
     if (!cid) return;
-    const newModule = { name: moduleName, course: course.number };
-    const module = await coursesClient.createModuleForCourse(
-      course.number,
-      newModule
-    );
+    const newModule = { name: moduleName, course: cid };
+    const module = await coursesClient.createModuleForCourse(cid, newModule);
     dispatch(addModule(module));
   };
   const removeModule = async (moduleId: string) => {
@@ -60,7 +57,7 @@ export default function Modules({ course }: { course: any }) {
             key={module._id}
             className="wd-module list-group-item p-0 mb-5 fs-5 border-gray"
           >
-            <div className="wd-title p-3 ps-2 bg-secondary">
+            <div className="wd-title p-3 ps-2 bg-secondary align-items-center">
               <BsGripVertical className="me-2 fs-3" />
               {!module.editing && module.name}
               {module.editing && (
@@ -90,14 +87,13 @@ export default function Modules({ course }: { course: any }) {
                 {module.lessons.map((lesson: any) => (
                   <li
                     key={lesson._id}
-                    className="wd-lesson list-group-item p-3 ps-1"
+                    className="wd-lesson list-group-item d-flex align-items-center justify-content-between p-3 ps-1"
                   >
-                    <BsGripVertical className="me-2 fs-3" /> {lesson.name}
-                    {currentUser.role === "FACULTY" && (
-                      <div>
-                        <LessonControlButtons />
-                      </div>
-                    )}
+                    <div className="d-flex align-items-center">
+                      <BsGripVertical className="me-2 fs-3" />
+                      <span>{lesson.name}</span>
+                    </div>
+                    {currentUser.role === "FACULTY" && <LessonControlButtons />}
                   </li>
                 ))}
               </ul>

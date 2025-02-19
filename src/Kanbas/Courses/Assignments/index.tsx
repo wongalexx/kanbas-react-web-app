@@ -1,8 +1,6 @@
-import "../../styles.css";
 import { AiOutlinePlus } from "react-icons/ai";
 import { BsGripVertical } from "react-icons/bs";
 import { CiSearch } from "react-icons/ci";
-import LessonControlButtons from "../Modules/LessonControlButtons";
 import { RxTriangleDown } from "react-icons/rx";
 import { FaPlus } from "react-icons/fa";
 import { IoEllipsisVertical } from "react-icons/io5";
@@ -10,27 +8,26 @@ import { MdOutlineAssignment } from "react-icons/md";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setAssignments, deleteAssignment } from "./reducer";
-import { FaTrashCan } from "react-icons/fa6";
 import AssignmentsButtons from "./AssignmentsButtons";
 import { useEffect, useState } from "react";
 import * as coursesClient from "../client";
 import * as assignmentsClient from "./client";
 export default function Assignments({ course }: { course: any }) {
+  const { cid, aid } = useParams();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const fetchAssignments = async () => {
     const assignments = await coursesClient.findAssignmentsForCourse(
-      course.number as string
+      cid as string
     );
-    console.log("ASSIGNMENTS", assignments);
     dispatch(setAssignments(assignments));
   };
   const removeAssignment = async (assignmentId: string) => {
     await assignmentsClient.deleteAssignment(assignmentId);
     dispatch(deleteAssignment(assignmentId));
   };
-  const { cid, aid } = useParams();
+
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [assignmentToDelete, setAssignmentToDelete] = useState<string | null>(
     null
@@ -89,22 +86,24 @@ export default function Assignments({ course }: { course: any }) {
         <li className="wd-assignments list-group-item p-0 mb-5 fs-5 border-gray">
           <div
             id="wd-assignments-title"
-            className="wd-title p-3 ps-2 bg-secondary"
+            className="wd-title p-3 ps-2 bg-secondary d-flex justify-content-between align-items-center"
           >
-            <BsGripVertical className="me-2 fs-3" />
-            <RxTriangleDown />
-            <b>ASSIGNMENTS</b>
+            <div className="d-flex align-items-center">
+              <BsGripVertical className="me-2 fs-3" />
+              <RxTriangleDown className="me-1" />
+              <b>ASSIGNMENTS</b>
+            </div>
             {currentUser.role === "FACULTY" && (
-              <div className="float-end">
+              <div className="d-flex align-items-center">
                 <button
                   id="wd-assignments-title-grade-percent"
                   type="button"
-                  className="btn btn-outline-secondary"
+                  className="btn btn-outline-secondary me-2 p-1 rounded-pill text-black"
                   disabled
                 >
-                  40% of Total
+                  <span>40% of Total</span>
                 </button>
-                <FaPlus />
+                <FaPlus className="me-1" />
                 <IoEllipsisVertical className="fs-4" />
               </div>
             )}
@@ -112,9 +111,9 @@ export default function Assignments({ course }: { course: any }) {
           {assignments.map((assignment: any) => (
             <li className="wd-assignment-list-item list-group-item p-3 ps-1">
               <div className="row">
-                <div className="col text-left">
+                <div className="col-1 d-flex justify-content-center align-items-center">
                   <BsGripVertical className="me-2 fs-3" />
-                  <MdOutlineAssignment color="green" />
+                  <MdOutlineAssignment className="fs-3" color="green" />
                 </div>
                 <div className="col-9 text-left p-0">
                   <div className="row">
@@ -147,7 +146,7 @@ export default function Assignments({ course }: { course: any }) {
                   </div>
                 </div>
                 {currentUser.role === "FACULTY" ? (
-                  <div className="col text-right">
+                  <div className="col d-flex justify-content-end align-items-center">
                     <AssignmentsButtons
                       assignmentID={assignment._id}
                       deleteAssignment={() =>
@@ -164,9 +163,23 @@ export default function Assignments({ course }: { course: any }) {
         </li>
       </ul>
       {showDeleteDialog && (
-        <div className="modal show" style={{ display: "block", zIndex: 1050 }}>
+        <div
+          id="wd-delete-dialog"
+          className="modal fade show"
+          style={{ display: "block", zIndex: 1050 }}
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+        >
           <div className="modal-dialog">
             <div className="modal-content">
+              <div className="modal-header">
+                <h1 className="modal-title fs-5">Delete Assignment</h1>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={handleCancelDelete}
+                ></button>
+              </div>
               <div className="modal-body">
                 <p>Are you sure you want to delete this assignment?</p>
               </div>
